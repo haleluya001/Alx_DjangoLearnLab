@@ -22,7 +22,7 @@ class LibraryDetailView(DetailView):
     context_object_name = "library"
 
 # User Registration
-def register_view(request):
+def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -34,7 +34,7 @@ def register_view(request):
     return render(request, "relationship_app/register.html", {"form": form})
 
 # User Login
-def login_view(request):
+def login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -47,7 +47,7 @@ def login_view(request):
 
 # User Logout
 @login_required
-def logout_view(request):
+def logout(request):
     logout(request)
     return render(request, "relationship_app/logout.html")
 
