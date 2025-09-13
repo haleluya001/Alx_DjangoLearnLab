@@ -1,9 +1,10 @@
+from .models import Library
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic.detail import DetailView
-from .models import Book, Library, UserProfile
+from .models import Book, UserProfile
 from .forms import BookForm
 # Function-based view: list all books
 def list_books(request):
@@ -15,6 +16,10 @@ class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"
     context_object_name = "library"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['books'] = self.object.books.all()  
+        return context
 
 # User Registration
 def register(request):
