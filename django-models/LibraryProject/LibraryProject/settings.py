@@ -43,6 +43,13 @@ INSTALLED_APPS = [
     'relationship_app',
 ]
 
+# URL to redirect to when a user is not logged in
+LOGIN_URL = '/relationship_app/login/'
+
+# Optional: URL to redirect after login
+LOGIN_REDIRECT_URL = '/relationship_app/books/'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
