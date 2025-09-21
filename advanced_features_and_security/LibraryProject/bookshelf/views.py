@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from .forms import BookSearchForm, BookForm
 from django.http import JsonResponse, HttpResponse
+from .forms import ExampleForm 
 
 @require_http_methods(["GET"])
 def book_list(request):
