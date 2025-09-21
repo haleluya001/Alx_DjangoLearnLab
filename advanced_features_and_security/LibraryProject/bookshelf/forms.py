@@ -32,3 +32,13 @@ class BookForm(forms.ModelForm):
             raise forms.ValidationError("Title is required.")
         # Additional sanitization (example): drop suspicious long whitespace
         return title
+
+
+class ExampleForm(forms.ModelForm):
+    """
+    Example form for securely handling book data.
+    Uses Django's form validation to protect against SQL injection and XSS.
+    """
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'published_date']
