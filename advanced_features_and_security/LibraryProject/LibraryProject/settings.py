@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-x*7yee0+j0qhv6_h$1_&!o(277=fz8f*3$8i$^s-@pnradbvy2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     #local apss
     'bookshelf',
     'relationship_app',
+    'csp',
 ]
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
@@ -54,13 +55,14 @@ LOGIN_REDIRECT_URL = '/relationship_app/books/'
 
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",             # early for header injection
+    "csp.middleware.CSPMiddleware",                              # optional: enforces CSP (if installed)
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",                 # protects against CSRF
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -79,6 +81,47 @@ TEMPLATES = [
         },
     },
 ]
+
+
+# HTTPS / cookie security
+SECURE_SSL_REDIRECT = True           # redirect HTTP -> HTTPS (requires working TLS)
+SESSION_COOKIE_SECURE = True         # session cookie only over HTTPS
+CSRF_COOKIE_SECURE = True            # CSRF cookie only over HTTPS
+SESSION_COOKIE_HTTPONLY = True       # not readable from JS
+CSRF_COOKIE_HTTPONLY = False         # must be accessible by JS for certain JS frameworks; Django default False
+
+# Browser protections
+SECURE_BROWSER_XSS_FILTER = True     # sets X-XSS-Protection header (legacy but useful)
+SECURE_CONTENT_TYPE_NOSNIFF = True   # sets X-Content-Type-Options: nosniff
+X_FRAME_OPTIONS = "DENY"             # prevents clickjacking
+
+# HSTS - enable only after TLS is correctly set up and tested.
+SECURE_HSTS_SECONDS = 31536000       # 1 year; set 0 while testing
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Content Security Policy (CSP) settings using django-csp (recommended).
+# If you don't install django-csp, see views.py example to add header manually.
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'",)  # add trusted script hosts as needed
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # try to remove 'unsafe-inline' in prod
+CSP_IMG_SRC = ("'self'", "data:")
+CSP_FONT_SRC = ("'self'", "data:")
+CSP_CONNECT_SRC = ("'self'",)
+
+# Logging important security events
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {
+        "django.security": {"handlers": ["console"], "level": "WARNING"},
+        "django.request": {"handlers": ["console"], "level": "ERROR"},
+    },
+}
+
+# Other settings (databases, staticfiles, templates) remain unchanged below...
+# ---------------------------------------------------------------------------
 
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
