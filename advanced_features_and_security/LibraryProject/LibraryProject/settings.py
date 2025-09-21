@@ -109,6 +109,32 @@ CSP_IMG_SRC = ("'self'", "data:")
 CSP_FONT_SRC = ("'self'", "data:")
 CSP_CONNECT_SRC = ("'self'",)
 
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Strict Transport Security (HSTS)
+# Instructs browsers to only use HTTPS for 1 year.
+# ⚠️ Enable ONLY after confirming HTTPS works properly, otherwise you can lock yourself out.
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Secure cookies: transmitted only over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# HttpOnly: prevent JavaScript from accessing session cookies
+SESSION_COOKIE_HTTPONLY = True
+# Keep CSRF cookie accessible if needed by JS frameworks; default is False
+CSRF_COOKIE_HTTPONLY = False
+
+# Security headers
+X_FRAME_OPTIONS = "DENY"             # Protect against clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True   # Prevent MIME sniffing
+# SECURE_BROWSER_XSS_FILTER is deprecated, safe to remove
+# SECURE_BROWSER_XSS_FILTER = True
+
 # Logging important security events
 LOGGING = {
     "version": 1,
