@@ -19,3 +19,15 @@ This project demonstrates advanced API development with Django REST Framework (D
 
 ## Testing
 Use Postman or curl to test endpoints.
+
+
+### BookListView Query Capabilities
+
+- **Filtering:** `title`, `author`, `publication_year`  
+  Example: `/api/books/?title=Django`
+
+- **Search:** Text search on `title` and `author.name`  
+  Example: `/api/books/?search=William`
+
+- **Ordering:** Sort by `title` or `publication_year`  
+  Example: `/api/books/?ordering=-publication_year`
