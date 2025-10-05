@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     #local apps
     'blog',
+    
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,17 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_blog.urls'
+
+
+MEDIA_URL = '/media/'
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Login redirect settings
+LOGIN_REDIRECT_URL = 'blog:profile'
+LOGOUT_REDIRECT_URL = 'blog:login'
 
 TEMPLATES = [
     {
