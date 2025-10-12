@@ -12,16 +12,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
     def create(self, validated_data):
-        # Create user using Django's built-in method
         user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password']
         )
-
-        # Automatically create an authentication token for the new user
         Token.objects.create(user=user)
-
         return user
 
 
@@ -39,4 +35,4 @@ class LoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture']
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']

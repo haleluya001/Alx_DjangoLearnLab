@@ -8,3 +8,12 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    # Optional helper methods for follow/unfollow
+    def follow(self, user):
+        self.following.add(user)
+        user.followers.add(self)
+
+    def unfollow(self, user):
+        self.following.remove(user)
+        user.followers.remove(self)
