@@ -1,12 +1,17 @@
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
+
 from .models import CustomUser
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
-# Registration
+
+# -------------------------
+# User Registration View
+# -------------------------
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
@@ -22,7 +27,10 @@ class RegisterView(generics.CreateAPIView):
             "token": token.key
         }, status=status.HTTP_201_CREATED)
 
-# Login
+
+# -------------------------
+# User Login View
+# -------------------------
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
@@ -37,9 +45,10 @@ class LoginView(generics.GenericAPIView):
             "token": token.key
         })
 
-# Follow a user
-from rest_framework.views import APIView
 
+# -------------------------
+# Follow User View
+# -------------------------
 class FollowUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -50,7 +59,10 @@ class FollowUserView(APIView):
         request.user.follow(user_to_follow)
         return Response({"message": f"You are now following {user_to_follow.username}"}, status=status.HTTP_200_OK)
 
-# Unfollow a user
+
+# -------------------------
+# Unfollow User View
+# -------------------------
 class UnfollowUserView(APIView):
     permission_classes = [IsAuthenticated]
 
