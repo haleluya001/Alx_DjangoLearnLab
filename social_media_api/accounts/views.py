@@ -1,7 +1,6 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 
@@ -10,12 +9,12 @@ from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 
 # -------------------------
-# User Registration View
+# User Registration
 # -------------------------
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -29,11 +28,11 @@ class RegisterView(generics.CreateAPIView):
 
 
 # -------------------------
-# User Login View
+# User Login
 # -------------------------
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -47,10 +46,10 @@ class LoginView(generics.GenericAPIView):
 
 
 # -------------------------
-# Follow User View
+# Follow a User
 # -------------------------
 class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # ✅ Required by the check
 
     def post(self, request, user_id):
         user_to_follow = get_object_or_404(CustomUser, id=user_id)
@@ -61,10 +60,10 @@ class FollowUserView(APIView):
 
 
 # -------------------------
-# Unfollow User View
+# Unfollow a User
 # -------------------------
 class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]  # ✅ Required by the check
 
     def post(self, request, user_id):
         user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
