@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block title %}{% if form.instance.pk %}Edit Post{% else %}New Post{% endif %}{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">{% if form.instance.pk %}Edit Post{% else %}New Post{% endif %}</h1>
+<form method="post" class="space-y-4 bg-white p-6 rounded-xl shadow-md">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="px-6 py-3 bg-teal-500 text-white rounded hover:bg-teal-600">
+        {% if form.instance.pk %}Update{% else %}Create{% endif %}
+    </button>
+</form>
+{% endblock %}

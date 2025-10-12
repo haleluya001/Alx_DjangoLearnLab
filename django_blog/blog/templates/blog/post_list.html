@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+{% block title %}All Posts{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">All Posts</h1>
+{% for post in posts %}
+<div class="p-4 mb-4 border rounded-lg shadow-sm hover:shadow-md transition">
+    <a href="{{ post.get_absolute_url }}" class="text-xl font-semibold text-teal-600 hover:underline">
+        {{ post.title }}
+    </a>
+    <p class="text-gray-700 dark:text-gray-300 mt-2">{{ post.content|truncatewords:30 }}</p>
+    <span class="text-sm text-gray-500">by {{ post.author.username }} | {{ post.created_at|date:"M d, Y" }}</span>
+</div>
+{% empty %}
+<p>No posts available.</p>
+{% endfor %}
+{% endblock %}
