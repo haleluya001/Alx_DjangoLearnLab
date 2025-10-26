@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, Post, Comment, Tag
+from taggit.forms import TagWidget
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
@@ -40,13 +41,12 @@ class ProfileForm(forms.ModelForm):
         fields = ('bio', 'avatar')
 
 
-class PostForm(forms.ModelForm):
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(),
-        required=False,
-        widget=forms.CheckboxSelectMultiple
-    )
 
+
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
+        widgets = {
+            'tags': TagWidget(),  # provides a user-friendly tag input
+        }

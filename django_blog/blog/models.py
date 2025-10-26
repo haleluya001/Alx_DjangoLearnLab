@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.urls import reverse
 from django.conf import settings
+from taggit.managers import TaggableManager
 
 class Tag(models.Model):
     name = models.CharField(max_length=30, unique=True)
@@ -17,19 +18,15 @@ class Post(models.Model):
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
-    tags = models.ManyToManyField(Tag, blank=True, related_name='posts')  # <--- Added for tagging
+    tags = TaggableManager(blank=True)  # <-- use taggit
     created_at = models.DateTimeField(auto_now_add=True)  
-    updated_at = models.DateTimeField(auto_now=True)     
-    
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         ordering = ['-created_at']
 
     def __str__(self):
         return self.title
-
-    def get_absolute_url(self):
-        return reverse('blog:post-detail', kwargs={'pk': self.pk})
-
 
 # -------------------------------
 # New Comment model
