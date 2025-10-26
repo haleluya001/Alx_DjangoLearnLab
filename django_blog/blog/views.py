@@ -15,27 +15,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 
 
-
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name = "blog/comment_form.html"
 
     def form_valid(self, form):
-        # Associate the comment with the logged-in user and the post
-        post_pk = self.kwargs["post_pk"]
-        post = get_object_or_404(Post, pk=post_pk)
+        post = get_object_or_404(Post, pk=self.kwargs["pk"])  # use pk instead of post_pk
         form.instance.author = self.request.user
         form.instance.post = post
         return super().form_valid(form)
 
     def get_success_url(self):
-        # Redirect back to the post detail page after creation
         return self.object.post.get_absolute_url()
+# -------------------------------
 
-# -------------------------------
-# Add comment on post detail page
-# -------------------------------
 def add_comment(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
     if not request.user.is_authenticated:
