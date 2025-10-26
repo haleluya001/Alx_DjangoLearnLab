@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Search results for "{{ query }}"</h1>
+
+<ul>
+    {% for post in results %}
+        <li>
+            <a href="{{ post.get_absolute_url }}" class="text-blue-500 hover:underline">{{ post.title }}</a>
+        </li>
+    {% empty %}
+        <li>No posts found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
