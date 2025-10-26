@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% block title %}{{ post.title }}{% endblock %}
+
 {% block content %}
 <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
     <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
@@ -11,6 +12,46 @@
         <a href="{% url 'blog:post-update' post.pk %}" class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Edit</a>
         <a href="{% url 'blog:post-delete' post.pk %}" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</a>
     </div>
+    {% endif %}
+</div>
+
+<!-- Comments Section -->
+<div class="mt-8">
+    <h2 class="text-2xl font-semibold mb-4">Comments</h2>
+
+    {% for comment in post.comments.all %}
+    <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+        <strong>{{ comment.author.username }}</strong> — 
+        <span class="text-sm text-gray-500">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+        <p class="mt-2">{{ comment.content }}</p>
+
+        {% if user == comment.author %}
+        <div class="mt-2 space-x-2">
+            <a href="{% url 'blog:comment-update' comment.pk %}" class="text-blue-500 hover:underline">Edit</a>
+            <a href="{% url 'blog:comment-delete' comment.pk %}" class="text-red-500 hover:underline">Delete</a>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p class="text-gray-500">No comments yet.</p>
+    {% endfor %}
+
+    <!-- Add Comment Form -->
+    {% if user.is_authenticated %}
+    <div class="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+        <h3 class="text-xl font-semibold mb-2">Add a comment</h3>
+        <form method="post" action="{% url 'blog:comment-create' post.pk %}">
+            {% csrf_token %}
+            {{ comment_form.non_field_errors }}
+            <textarea name="content" rows="3" placeholder="Write a comment..." class="w-full p-2 border rounded mb-2">{{ comment_form.content.value }}</textarea>
+            {% if comment_form.content.errors %}
+                <p class="text-red-500 text-sm">{{ comment_form.content.errors.0 }}</p>
+            {% endif %}
+            <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Submit</button>
+        </form>
+    </div>
+    {% else %}
+    <p class="mt-4"><a href="{% url 'blog:login' %}?next={{ post.get_absolute_url }}" class="text-blue-500 hover:underline">Log in to comment</a></p>
     {% endif %}
 </div>
 {% endblock %}
