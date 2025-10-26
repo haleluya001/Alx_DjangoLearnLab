@@ -1,7 +1,14 @@
 {% extends 'blog/base.html' %}
 {% block title %}All Posts{% endblock %}
 {% block content %}
-<h1 class="text-3xl font-bold mb-4">All Posts</h1>
+<h1 class="text-3xl font-bold mb-4">
+    {% if tag %}
+        Posts tagged with "{{ tag }}"
+    {% else %}
+        All Posts
+    {% endif %}
+</h1>
+
 {% for post in posts %}
 <div class="p-4 mb-4 border rounded-lg shadow-sm hover:shadow-md transition">
     <a href="{{ post.get_absolute_url }}" class="text-xl font-semibold text-teal-600 hover:underline">
@@ -9,6 +16,16 @@
     </a>
     <p class="text-gray-700 dark:text-gray-300 mt-2">{{ post.content|truncatewords:30 }}</p>
     <span class="text-sm text-gray-500">by {{ post.author.username }} | {{ post.created_at|date:"M d, Y" }}</span>
+    <!-- Display tags for each post -->
+    {% if post.tags.all %}
+    <div class="mt-2 space-x-2">
+        {% for tag in post.tags.all %}
+        <a href="{% url 'blog:posts-by-tag' tag.slug %}" class="text-sm text-teal-500 hover:underline">
+            #{{ tag.name }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 {% empty %}
 <p>No posts available.</p>
