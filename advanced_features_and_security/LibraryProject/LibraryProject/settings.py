@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------
 SECRET_KEY = 'django-insecure-x*7yee0+j0qhv6_h$1_&!o(277=fz8f*3$8i$^s-@pnradbvy2'
 DEBUG = False
-ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
+ALLOWED_HOSTS = ['*']  # Allow all hosts for testing or sandbox environment
 
 # ------------------------------
 # Application definition
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     "csp.middleware.CSPMiddleware",                           # optional: enforces CSP
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",             # protects against CSRF
+    "django.middleware.csrf.CsrfViewMiddleware",              # protects against CSRF
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -96,8 +96,10 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False  # Keep False if JS frameworks need CSRF token
 
 # Security headers
-X_FRAME_OPTIONS = 'DENY'             # Protect against clickjacking
+SECURE_BROWSER_XSS_FILTER = True     # Helps prevent reflected XSS
 SECURE_CONTENT_TYPE_NOSNIFF = True   # Prevent MIME sniffing
+X_FRAME_OPTIONS = 'DENY'             # Protect against clickjacking
+SECURE_REFERRER_POLICY = "same-origin"  # Optional, limits referrer info
 
 # Content Security Policy (requires django-csp)
 CSP_DEFAULT_SRC = ("'self'",)
